@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="إهداء إلى جدتي نعيمة، نبع الحنان ومصدر الدعاء">
+<title>إلى جدتي نعيمة 🌹 | رسالة من القلب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Lateef&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- شاشة التحميل -->
+<div class="loader" id="loader">
+    <div class="loader-emblem">
+        <div class="loader-ring"></div>
+        <div class="loader-heart">💗</div>
+    </div>
+    <p class="loader-text">جاري تحضير الهدية بحب...</p>
+</div>
+
+<!-- خلفية الجسيمات المتحركة -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- عناصر التحكم العلوية -->
+<div class="top-controls">
+    <button class="music-toggle" id="musicToggle" aria-label="تشغيل الموسيقى" aria-pressed="false">
+        <span class="music-icon">🎵</span>
+        <span class="sound-bars" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+        </span>
+    </button>
+</div>
+
+<!-- شريط التقدم عند السكرول -->
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="container">
+
+    <!-- القسم الرئيسي -->
+    <section class="hero-section" id="hero">
+        <div class="flowers flower1">🌸</div>
+        <div class="flowers flower2">🌺</div>
+        <div class="flowers flower3">🌷</div>
+        <div class="flowers flower4">🌹</div>
+        <div class="flowers flower5">🌻</div>
+        <div class="flowers flower6">✨</div>
+        <div class="flowers flower7">🕊️</div>
+
+        <div class="card main-card">
+            <div class="corner-ornament top-right">❁</div>
+            <div class="corner-ornament top-left">❁</div>
+            <div class="corner-ornament bottom-right">❁</div>
+            <div class="corner-ornament bottom-left">❁</div>
+
+            <div class="frame">
+                <div class="icon-top">
+                    <span class="grandma-icon">👵🏻</span>
+                    <span class="hearts-float h1">💕</span>
+                    <span class="hearts-float h2">💛</span>
+                </div>
+
+                <p class="eyebrow">إهداء خاص إلى</p>
+
+                <h1 class="main-title" data-text="جدتي نعيمة">
+                    <span class="letter-animate">جدتي نعيمة</span>
+                </h1>
+                <p class="subtitle typing-text">~ نبع الحنان ومصدر الدعاء ~</p>
+
+                <div class="divider">
+                    <span class="divider-icon">✦</span>
+                </div>
+
+                <div class="message-container">
+                    <p class="message fade-in-text">
+                        يا من <strong>غرست الحب</strong> في قلوبنا منذ الصغر، ويا من كانت
+                        كلماتك <strong>بلسماً</strong> لكل جرح، ودعاؤك <strong>سراً</strong>
+                        لكل نجاح... جدتي <strong>نعيمة</strong> الغالية، أنتِ <strong>تاج فوق رؤوسنا</strong>،
+                        وأنتِ الحكاية التي لا تُمل، والذكرى التي لا تُنسى.
+                    </p>
+
+                    <p class="message fade-in-text">
+                        كم كنتِ <strong>سنداً</strong> في أوقات الضعف، وكم كانت يداكِ
+                        الدافئتان <strong>ملاذاً</strong> لنا في كل وقت. شكراً لكِ على
+                        كل <strong>حكاية</strong> رويتِها، وكل <strong>دعوة</strong>
+                        رفعتِها، وكل <strong>ابتسامة</strong> أهديتِها لنا.
+                    </p>
+                </div>
+
+                <div class="divider">
+                    <span class="divider-icon">✦</span>
+                </div>
+
+                <div class="signature">
+                    <p class="signature-text">أحبك يا جدتي نعيمة أكثر مما تتخيلين</p>
+                    <div class="hearts-container">
+                        <button class="heart-btn" data-heart="💖">💖</button>
+                        <button class="heart-btn" data-heart="💛">💛</button>
+                        <button class="heart-btn" data-heart="💖">💖</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <span>مرري للأسفل</span>
+            <div class="scroll-arrow">↓</div>
+        </div>
+    </section>
+
+    <!-- قسم الذكريات -->
+    <section class="memories-section" id="memories">
+        <p class="section-eyebrow reveal">المسوا الصورة لتحيا الذكرى أمامكم</p>
+        <h2 class="section-title reveal">ذكريات لا تُنسى</h2>
+
+        <div class="memories-grid">
+            <button class="memory-card reveal" data-scene="taste" aria-label="افتح ذكرى حلاوة يديكِ">
+                <div class="memory-icon">🍪</div>
+                <h3>حلاوة يديكِ</h3>
+                <p>كل طبق طبختِه كان مليئاً بالحب والحنان</p>
+                <span class="memory-hint">اضغطي لتشاهدي الذكرى ✦</span>
+            </button>
+
+            <button class="memory-card reveal" data-scene="stories" aria-label="افتح ذكرى حكايات ما قبل النوم">
+                <div class="memory-icon">📖</div>
+                <h3>حكايات ما قبل النوم</h3>
+                <p>قصصكِ كانت أجمل من أي كتاب</p>
+                <span class="memory-hint">اضغطي لتشاهدي الذكرى ✦</span>
+            </button>
+
+            <button class="memory-card reveal" data-scene="prayers" aria-label="افتح ذكرى دعواتكِ الصادقة">
+                <div class="memory-icon">🤲</div>
+                <h3>دعواتكِ الصادقة</h3>
+                <p>كنتِ ولا زلتِ سرّ نجاحنا</p>
+                <span class="memory-hint">اضغطي لتشاهدي الذكرى ✦</span>
+            </button>
+
+            <button class="memory-card reveal" data-scene="hug" aria-label="افتح ذكرى حضنكِ الدافئ">
+                <div class="memory-icon">🫂</div>
+                <h3>حضنكِ الدافئ</h3>
+                <p>ملاذنا الآمن في كل وقت</p>
+                <span class="memory-hint">اضغطي لتشاهدي الذكرى ✦</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- قسم الرسالة الأخيرة -->
+    <section class="final-section" id="final">
+        <div class="card final-card reveal">
+            <div class="corner-ornament top-right small">❁</div>
+            <div class="corner-ornament top-left small">❁</div>
+            <div class="icon-top">🌹</div>
+            <h2>شكراً لكِ يا جدتي نعيمة</h2>
+            <p class="final-message">
+                على كل لحظة حب، على كل كلمة دعم، على كل دعاء صادق...
+                <br>
+                <strong>كنتِ ولا زلتِ وستبقين نجمة تضيء دربنا</strong>
+            </p>
+            <div class="signature-final">
+                <p>بكل الحب والتقدير 💝</p>
+                <p class="date" id="currentDate"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- التذييل وحقوق الإهداء -->
+    <footer class="site-footer">
+        <div class="footer-divider"><span>✦</span></div>
+        <p class="footer-dedication">هذا العمل إهداء خالص لجدتي الحبيبة <strong>نعيمة</strong> 🌹</p>
+        <p class="footer-credit">تصميم وتطوير: <strong>محمد ڨريسة</strong> — جميع الحقوق محفوظة © <span id="footerYear"></span></p>
+    </footer>
+
+</div>
+
+<!-- نافذة المشهد المتحرك -->
+<div class="scene-modal" id="sceneModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="scene-backdrop" id="sceneBackdrop"></div>
+    <div class="scene-stage" id="sceneStage">
+        <button class="scene-close" id="sceneClose" aria-label="إغلاق">✕</button>
+        <div class="scene-visual" id="sceneVisual"></div>
+        <div class="scene-narration" id="sceneNarration"></div>
+    </div>
+</div>
+
+<!-- تأثير القلوب المتساقطة -->
+<div class="falling-hearts" id="fallingHearts"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

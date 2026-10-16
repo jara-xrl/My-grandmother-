@@ -1,0 +1,883 @@
+/* ====================
+   المتغيرات العامة
+==================== */
+:root {
+    --gold: #c9a227;
+    --gold-bright: #e9c766;
+    --gold-light: #f4e5b8;
+    --maroon: #6e1f1f;
+    --maroon-light: #8a3030;
+    --brown-dark: #1f130c;
+    --brown-medium: #3d2314;
+    --brown-light: #8a5a2b;
+    --cream: #faf3e0;
+    --cream-light: #fffdf6;
+    --shadow-dark: rgba(0,0,0,0.55);
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --arabesque: radial-gradient(circle at 1px 1px, rgba(201,162,39,0.18) 1px, transparent 0);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+body {
+    font-family: 'Amiri', serif;
+    background:
+        var(--arabesque),
+        radial-gradient(ellipse at top, #3a2416 0%, transparent 60%),
+        linear-gradient(135deg, var(--brown-dark) 0%, var(--brown-medium) 50%, var(--brown-dark) 100%);
+    background-size: 22px 22px, cover, cover;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    cursor: default;
+}
+
+::selection {
+    background: var(--gold);
+    color: var(--brown-dark);
+}
+
+/* ====================
+   شاشة التحميل
+==================== */
+.loader {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: var(--brown-dark);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-emblem {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-ring {
+    position: absolute;
+    inset: 0;
+    border: 2px solid transparent;
+    border-top-color: var(--gold);
+    border-left-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 1.4s linear infinite;
+}
+
+.loader-heart {
+    font-size: 46px;
+    animation: heartbeat 1s ease-in-out infinite;
+}
+
+.loader-text {
+    color: var(--gold-light);
+    font-size: 18px;
+    margin-top: 22px;
+    font-family: 'Aref Ruqaa', serif;
+    letter-spacing: 0.5px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+}
+
+/* ====================
+   خلفية الجسيمات
+==================== */
+#particles-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ====================
+   شريط التقدم
+==================== */
+.progress-bar {
+    position: fixed;
+    top: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--maroon-light), var(--gold-bright));
+    z-index: 1000;
+    transition: width 0.1s ease;
+    width: 0%;
+    box-shadow: 0 0 12px var(--gold);
+}
+
+/* ====================
+   عناصر التحكم العلوية / زر الموسيقى
+==================== */
+.top-controls {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.music-toggle {
+    position: relative;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 55%, #92730f 100%);
+    border: 2px solid rgba(255,248,231,0.5);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 5px 20px rgba(212,175,55,0.45);
+    transition: var(--transition-smooth);
+}
+
+.music-toggle:hover {
+    transform: scale(1.08) rotate(8deg);
+    box-shadow: 0 8px 26px rgba(212,175,55,0.65);
+}
+
+.music-toggle:focus-visible {
+    outline: 3px solid var(--cream-light);
+    outline-offset: 3px;
+}
+
+.music-toggle.playing .music-icon {
+    animation: rotate 4s linear infinite;
+}
+
+.music-icon {
+    font-size: 22px;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.3));
+}
+
+.sound-bars {
+    position: absolute;
+    bottom: -14px;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.music-toggle.playing .sound-bars { opacity: 1; }
+
+.sound-bars span {
+    width: 3px;
+    background: var(--gold-bright);
+    border-radius: 2px;
+    height: 4px;
+    animation: bar-bounce 1s ease-in-out infinite;
+}
+
+.sound-bars span:nth-child(1) { animation-delay: 0s; }
+.sound-bars span:nth-child(2) { animation-delay: 0.15s; }
+.sound-bars span:nth-child(3) { animation-delay: 0.3s; }
+.sound-bars span:nth-child(4) { animation-delay: 0.45s; }
+
+@keyframes bar-bounce {
+    0%, 100% { height: 3px; }
+    50% { height: 12px; }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ====================
+   الحاوية الرئيسية
+==================== */
+.container {
+    position: relative;
+    z-index: 1;
+}
+
+/* ====================
+   القسم الرئيسي
+==================== */
+.hero-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px 40px;
+    position: relative;
+}
+
+.flowers {
+    position: absolute;
+    font-size: 35px;
+    opacity: 0.6;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(212,175,55,0.3));
+}
+
+.flower1 { top: 8%; left: 5%; animation-delay: 0s; }
+.flower2 { top: 15%; right: 8%; animation-delay: 1s; }
+.flower3 { bottom: 20%; left: 8%; animation-delay: 2s; }
+.flower4 { bottom: 15%; right: 5%; animation-delay: 1.5s; }
+.flower5 { top: 50%; left: 3%; animation-delay: 0.5s; }
+.flower6 { top: 30%; right: 3%; animation-delay: 2.4s; font-size: 22px; }
+.flower7 { bottom: 40%; right: 12%; animation-delay: 0.9s; font-size: 26px; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-25px) rotate(15deg); }
+}
+
+/* ====================
+   البطاقة الرئيسية (شكل محراب ذهبي — العنصر المميز)
+==================== */
+.card {
+    background: linear-gradient(145deg, var(--cream), var(--cream-light));
+    padding: 70px 50px 50px;
+    max-width: 700px;
+    width: 100%;
+    box-shadow:
+        0 25px 70px var(--shadow-dark),
+        inset 0 0 30px rgba(212,175,55,0.12);
+    position: relative;
+    border: 3px solid var(--gold);
+    animation: fadeInUp 1.2s ease-out;
+}
+
+.main-card {
+    border-radius: 260px 260px 26px 26px / 130px 130px 26px 26px;
+}
+
+.final-card { border-radius: 26px; padding: 55px 40px; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.corner-ornament {
+    position: absolute;
+    font-size: 32px;
+    color: var(--gold);
+    opacity: 0.7;
+}
+
+.corner-ornament.small { font-size: 24px; }
+
+.top-right { top: 18px; right: 22px; }
+.top-left { top: 18px; left: 22px; }
+.bottom-right { bottom: 15px; right: 20px; }
+.bottom-left { bottom: 15px; left: 20px; }
+
+.frame {
+    border: 2px dashed var(--gold);
+    border-radius: 20px;
+    padding: 40px 30px;
+    position: relative;
+}
+
+/* ====================
+   الأيقونات والعناوين
+==================== */
+.icon-top {
+    text-align: center;
+    font-size: 58px;
+    margin-bottom: 14px;
+    position: relative;
+}
+
+.grandma-icon {
+    display: inline-block;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.hearts-float {
+    position: absolute;
+    font-size: 26px;
+    animation: floatUp 2.2s ease-in-out infinite;
+    top: 0;
+}
+.hearts-float.h1 { left: 56%; animation-delay: 0s; }
+.hearts-float.h2 { right: 56%; font-size: 20px; animation-delay: 1s; }
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-30px); opacity: 0; }
+}
+
+.eyebrow {
+    text-align: center;
+    color: var(--maroon);
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    font-family: 'Amiri', serif;
+    opacity: 0.85;
+}
+
+.main-title {
+    font-family: 'Aref Ruqaa', serif;
+    text-align: center;
+    font-size: 48px;
+    color: var(--brown-light);
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.letter-animate {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--maroon-light), var(--gold-bright), var(--brown-light), var(--gold-bright), var(--maroon-light));
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 4s linear infinite;
+}
+
+@keyframes shine { to { background-position: 250% center; } }
+
+.subtitle {
+    text-align: center;
+    color: #b8860b;
+    font-size: 19px;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+.typing-text {
+    overflow: hidden;
+    white-space: nowrap;
+    border-left: 3px solid var(--gold);
+    animation: typing 2s steps(30) 0.5s forwards, blink 0.7s infinite;
+    width: 0;
+    margin: 0 auto 30px;
+}
+
+@keyframes typing { to { width: 100%; } }
+@keyframes blink { 50% { border-color: transparent; } }
+
+/* ====================
+   الفواصل
+==================== */
+.divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 25px 0;
+    gap: 15px;
+}
+
+.divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.divider-icon {
+    color: var(--gold);
+    font-size: 26px;
+    animation: rotate 4s linear infinite;
+    display: inline-block;
+}
+
+/* ====================
+   الرسائل
+==================== */
+.message-container { position: relative; }
+
+.message {
+    font-size: 20px;
+    line-height: 2.2;
+    color: var(--brown-medium);
+    text-align: justify;
+    margin-bottom: 25px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: var(--transition-smooth);
+}
+
+.message.visible { opacity: 1; transform: translateY(0); }
+
+.message strong {
+    color: var(--maroon);
+    position: relative;
+}
+
+.message strong::after {
+    content: "";
+    position: absolute;
+    bottom: -2px; right: 0;
+    width: 0; height: 2px;
+    background: var(--gold);
+    transition: width 0.5s ease;
+}
+
+.message.visible strong::after { width: 100%; }
+
+/* ====================
+   التوقيع والقلوب
+==================== */
+.signature {
+    text-align: center;
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 2px solid var(--gold);
+}
+
+.signature-text {
+    font-family: 'Aref Ruqaa', serif;
+    font-size: 27px;
+    color: var(--maroon);
+    margin-bottom: 20px;
+}
+
+.hearts-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.heart-btn {
+    background: none;
+    border: none;
+    font-size: 35px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    animation: pulse 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 5px rgba(212,175,55,0.3));
+}
+
+.heart-btn:nth-child(2) { animation-delay: 0.3s; }
+.heart-btn:nth-child(3) { animation-delay: 0.6s; }
+.heart-btn:hover { transform: scale(1.4) rotate(15deg); }
+.heart-btn:active { transform: scale(0.9); }
+.heart-btn:focus-visible { outline: 2px solid var(--maroon); outline-offset: 3px; }
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* ====================
+   مؤشر السكرول
+==================== */
+.scroll-indicator {
+    margin-top: 34px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--gold-light);
+    font-size: 14px;
+    animation: fadeInOut 2s ease-in-out infinite;
+}
+
+.scroll-arrow {
+    font-size: 24px;
+    margin-top: 5px;
+    animation: bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* ====================
+   قسم الذكريات
+==================== */
+.memories-section {
+    padding: 100px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-eyebrow {
+    text-align: center;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    opacity: 0.85;
+}
+
+.section-title {
+    font-family: 'Aref Ruqaa', serif;
+    text-align: center;
+    font-size: 40px;
+    color: var(--gold-light);
+    margin-bottom: 55px;
+}
+
+.memories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.memory-card {
+    background: linear-gradient(145deg, var(--cream), var(--cream-light));
+    border-radius: 20px;
+    padding: 40px 25px 32px;
+    text-align: center;
+    border: 2px solid var(--gold);
+    transition: var(--transition-smooth);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.memory-card:hover, .memory-card:focus-visible {
+    transform: translateY(-15px) scale(1.03);
+    box-shadow: 0 20px 40px rgba(212,175,55,0.35);
+    outline: none;
+}
+
+.memory-icon {
+    font-size: 50px;
+    margin-bottom: 20px;
+    display: inline-block;
+    animation: bounce 3s ease-in-out infinite;
+    transition: transform 0.3s ease;
+}
+
+.memory-card:hover .memory-icon { transform: scale(1.15); }
+
+.memory-card h3 {
+    font-family: 'Aref Ruqaa', serif;
+    color: var(--maroon);
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.memory-card p {
+    color: var(--brown-medium);
+    line-height: 1.8;
+    margin-bottom: 14px;
+}
+
+.memory-hint {
+    font-size: 12px;
+    color: var(--gold);
+    opacity: 0.75;
+    letter-spacing: 0.5px;
+}
+
+/* ====================
+   قسم النهاية
+==================== */
+.final-section {
+    padding: 60px 20px 80px;
+    display: flex;
+    justify-content: center;
+}
+
+.final-card { text-align: center; max-width: 600px; }
+
+.final-card h2 {
+    font-family: 'Aref Ruqaa', serif;
+    font-size: 34px;
+    color: var(--maroon);
+    margin: 18px 0;
+}
+
+.final-message {
+    font-size: 21px;
+    line-height: 2;
+    color: var(--brown-medium);
+    margin: 28px 0;
+}
+
+.signature-final {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 2px solid var(--gold);
+}
+
+.signature-final p:first-child {
+    font-family: 'Aref Ruqaa', serif;
+    font-size: 23px;
+    color: var(--brown-light);
+}
+
+.date { color: #999; font-size: 14px; margin-top: 10px; }
+
+/* ====================
+   التذييل
+==================== */
+.site-footer {
+    text-align: center;
+    padding: 30px 20px 60px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.footer-divider {
+    color: var(--gold);
+    font-size: 20px;
+    opacity: 0.6;
+    margin-bottom: 18px;
+}
+
+.footer-dedication {
+    font-family: 'Aref Ruqaa', serif;
+    color: var(--gold-light);
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.footer-credit {
+    color: rgba(244,229,184,0.55);
+    font-size: 13px;
+    letter-spacing: 0.3px;
+}
+
+.footer-credit strong { color: var(--gold); }
+
+/* ====================
+   تأثيرات الظهور (Reveal)
+==================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+/* ====================
+   القلوب المتساقطة
+==================== */
+.falling-hearts {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 999;
+    overflow: hidden;
+}
+
+.falling-heart {
+    position: absolute;
+    font-size: 25px;
+    animation: fall linear forwards;
+    pointer-events: none;
+}
+
+@keyframes fall {
+    to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
+/* ====================
+   نافذة المشهد المتحرك
+==================== */
+.scene-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.scene-modal.open { opacity: 1; visibility: visible; }
+
+.scene-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 9, 5, 0.88);
+    backdrop-filter: blur(4px);
+}
+
+.scene-stage {
+    position: relative;
+    width: 100%;
+    max-width: 620px;
+    min-height: 420px;
+    border-radius: 28px;
+    border: 2px solid var(--gold);
+    background: linear-gradient(160deg, #241407, #150c05 70%);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), inset 0 0 60px rgba(201,162,39,0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 30px 34px;
+    transform: scale(0.85);
+    transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.scene-modal.open .scene-stage { transform: scale(1); }
+
+.scene-close {
+    position: absolute;
+    top: 16px; left: 16px;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    background: rgba(0,0,0,0.35);
+    color: var(--gold-light);
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    z-index: 5;
+}
+
+.scene-close:hover { background: var(--maroon); transform: rotate(90deg); }
+.scene-close:focus-visible { outline: 2px solid var(--gold-light); }
+
+.scene-visual {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 26px;
+}
+
+.scene-narration {
+    font-family: 'Lateef', 'Amiri', serif;
+    font-size: 22px;
+    line-height: 2;
+    color: var(--gold-light);
+    text-align: center;
+    max-width: 480px;
+    min-height: 90px;
+}
+
+.scene-narration .cursor-blink {
+    display: inline-block;
+    width: 2px;
+    background: var(--gold-bright);
+    margin-inline-start: 2px;
+    animation: blink 0.7s infinite;
+}
+
+/* --- مشهد: حلاوة يديكِ (الطعام والدفء) --- */
+.scene-cup {
+    font-size: 70px;
+    animation: gentle-sway 3s ease-in-out infinite;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
+}
+@keyframes gentle-sway {
+    0%, 100% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
+}
+.steam {
+    position: absolute;
+    top: -10px;
+    font-size: 22px;
+    opacity: 0;
+    animation: steam-rise 2.6s ease-in infinite;
+    color: var(--gold-light);
+}
+.steam:nth-child(1) { left: 42%; animation-delay: 0s; }
+.steam:nth-child(2) { left: 50%; animation-delay: 0.8s; }
+.steam:nth-child(3) { left: 58%; animation-delay: 1.6s; }
+@keyframes steam-rise {
+    0% { transform: translateY(0) scale(0.7); opacity: 0; }
+    30% { opacity: 0.8; }
+    100% { transform: translateY(-90px) scale(1.3); opacity: 0; }
+}
+
+/* --- مشهد: حكايات ما قبل النوم (الليل والقصص) --- */
+.scene-night {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.scene-moon {
+    position: absolute;
+    top: 6px; right: 30%;
+    font-size: 54px;
+    animation: moon-glow 3s ease-in-out infinite;
+}
+@keyframes moon-glow {
+    0%, 100% { filter: drop-shadow(0 0 10px rgba(233,199,102,0.5)); }
+    50% { filter: drop-shadow(0 0 24px rgba(233,199,102,0.9)); }
+}
+.scene-star {
+    position: absolute;
+    font-size: 14px;
+    color: var(--gold-bright);
+    animation: twinkle 1.8s ease-in-out infinite;
+}
+.scene-book {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 56px;
+    animation: book-open 2.5s ease-in-out infinite;
+}
+@keyframes book-open {
+    0%, 100% { transform: translateX(-50%) rotate(-3deg); }
+    50% { transform: translateX(-50%) rotate(3deg); }
+}
+@keyframes twinkle {
+    0%, 100% { opacity: 0.25; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* --- مشهد: دعواتكِ الصادقة (الدعاء والنور) --- */
+.scene-hands {
+    font-size: 66px;
+    animation: hands-rise 2.4s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
+}
+@keyframes hands-rise {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+.ray {
+    position: absolute;
+  
